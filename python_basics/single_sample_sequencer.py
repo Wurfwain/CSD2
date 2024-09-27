@@ -40,4 +40,3 @@ def timestamps(timestamps16ths, bpm):
 print(timestamps(timestamps16th, bpm))
 #print(timestamps(timestamps16th, bpm))
 
-# dit is een kleine notitie om te kijken of git wil werken, pls werk.
