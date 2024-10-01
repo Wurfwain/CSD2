@@ -37,6 +37,7 @@ def durations_to_time_stamps16th(durations_list):
 stamps_kick = durations_to_time_stamps16th(note_dur_kick)
 print("kick: ", stamps_kick)
 
+# Emptying the timestamps16th list before re-using the function:
 timestamps16th = [0] 
 
 stamps_snare = durations_to_time_stamps16th(note_dur_snare)
@@ -47,6 +48,7 @@ timestamps16th = [0]
 stamps_hh = durations_to_time_stamps16th(note_dur_hh)
 print("hi-hat: ", stamps_hh)
 
+timestamps16th = [0] 
 
 
 def timestamps(timestamps16ths, bpm):
