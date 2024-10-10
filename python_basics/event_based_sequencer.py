@@ -1,7 +1,13 @@
 #event_based_sequencer
+#een rommelige semi code waarin ik veel heb gestruggled en uiteindelijk de code
+#van Semuel heb gebruikt om te proberen het te begrijpen.
 import simpleaudio  as sa
 import time
 
+# Load Samples
+kick = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Kick1.wav")
+snare = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare1.wav")
+hihat = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat1.wav")
 
 # Determine BPM
 bpm = 120
@@ -21,6 +27,7 @@ note_dur_kick = [1, 1, 1, 1, 1, 1, 1, 1]
 note_dur_snare = [1, 2, 2, 2]
 note_dur_hh = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
 
+# Note durations to 16th notes, depending on BPM
 def durations_to_time_stamps16th(durations_list):
    
     timestamp_current = 0                                        # a variable that will later help with adding up the times to make a list of time stamps (16ths)
@@ -34,23 +41,24 @@ def durations_to_time_stamps16th(durations_list):
 
 
 # DIT KAN EFFICIENTER?
-stamps_kick = durations_to_time_stamps16th(note_dur_kick)
-print("kick: ", stamps_kick)
+# Function per instrument
+durs_kick = durations_to_time_stamps16th(note_dur_kick)
+print("durs kick: ", durs_kick)
 
 # Emptying the timestamps16th list before re-using the function:
 timestamps16th = [0] 
 
-stamps_snare = durations_to_time_stamps16th(note_dur_snare)
-print("snare: ", stamps_snare)
+durs_snare = durations_to_time_stamps16th(note_dur_snare)
+print("durs snare: ", durs_snare)
 
 timestamps16th = [0] 
 
-stamps_hh = durations_to_time_stamps16th(note_dur_hh)
-print("hi-hat: ", stamps_hh)
+durs_hh = durations_to_time_stamps16th(note_dur_hh)
+print("durs hi-hat: ", durs_hh)
 
 timestamps16th = [0] 
 
-
+# Note duration to timestamps
 def timestamps(timestamps16ths, bpm):
 
     sixteenth_note_duration = 60.0 / float(bpm) / 4.0                       # the duration of 1 sixteenth is calculated, depending on the BPM
@@ -60,6 +68,76 @@ def timestamps(timestamps16ths, bpm):
 
     return timestamps16ths
 
-print(timestamps(stamps_snare, bpm))
+stamps_kick = timestamps(durs_kick, bpm)
+stamps_snare = timestamps(durs_snare, bpm)
+stamps_hh = timestamps(durs_hh, bpm)
 
-bladiebla
+#print(timestamps(durs_kick, bpm))
+#print(timestamps(durs_snare, bpm))
+#print(timestamps(durs_hh, bpm))
+
+# Make events (bron: Semuel)
+def make_events(timestamps, instrument):
+    events = []
+    for i in timestamps:
+        new_event = {
+            'timestamp': i,
+            'instrument': instrument
+        }
+        events.append(new_event)
+
+    return events
+    
+#print(make_events(stamps_snare, snare))
+
+# (bron: Semuel)
+def get_timestamps(event):
+    return event['timestamp']
+
+# Sort events (bron: Semuel)
+events = make_events(stamps_kick, kick) + make_events(stamps_snare, snare) + make_events(stamps_hh, hihat)
+events.sort(key=get_timestamps)
+
+#print(events)
+
+
+######### Play according to timestamps
+
+start_time = time.time()
+
+
+# uit eventlist de timestamps lezen en vergelijken met de tijd nu
+
+#for event in events:
+
+#print("Full events: ", events)
+#print(events[5]['timestamp'])
+
+# Function to play (bron: Semuel)
+def handle_event (event):
+    #print("play!!")
+    event['instrument'].play()
+
+
+
+
+# Tijd aflezen en vergelijken met timestamps (bron: wederom Semuel)
+while events:
+    current_time = time.time()
+    current_timestamp = events[0]['timestamp']
+
+    if(current_time - start_time >= current_timestamp):
+        simultaneous_events = []
+
+        while events and events[0]['timestamp'] == current_timestamp:
+            simultaneous_events.append(events.pop(0))
+        for event in simultaneous_events:
+            #print()
+            handle_event(event)
+        
+    else:  
+        time.sleep(0.001)
+
+
+
+time.sleep(1)   # for the last note to 'ring out'
