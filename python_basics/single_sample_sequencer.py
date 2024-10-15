@@ -38,4 +38,3 @@ def timestamps(timestamps16ths, bpm):
     return timestamps16ths
 
 print(timestamps(timestamps16th, bpm))
-
