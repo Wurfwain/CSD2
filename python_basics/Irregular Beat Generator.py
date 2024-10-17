@@ -9,7 +9,7 @@ step 4: play events
 step 5: store to MIDI? (user input)
 step 6: store and/or loop
 """
-
+# ======== PREPARATION ========
 import simpleaudio  as sa
 import time
 import random
@@ -19,6 +19,7 @@ kick = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2
 snare = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare1.wav")
 hihat = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat1.wav")
 
+# ======== USER INPUT ========
 # Determine BPM
 bpm = 120
 print("Default BPM: ", bpm)
@@ -36,7 +37,7 @@ while new_bpm == False:
         print("That might be a bit slow, we've sped it up to: ", bpm)
         break
     elif bpm > 240:
-        print("That might be a bit fast. Please choose a BPM under 240.")
+        print("That might be a bit fast. Please choose a BPM under 241.")
     else:
         new_bpm = True
         print("You've set the BPM to: ", int(bpm))
@@ -50,10 +51,27 @@ input_time_signature = input("Would you like to change this to 7/4? yes/no: ").l
 if input_time_signature == "yes" or input_time_signature == "Yes, please":
     steps = 7*2
 
-#pulses = random.randint(2, steps)
+# Asking for repeats
+repeats = 4
+print("The default amount of rhythm repeats is: ", repeats)
+input_repeats = input("Would you like to change the amount of rhythm repeats? yes/no: ").lower()
+new_repeats = False
 
+while new_repeats == False:
 
-# Generate rhythm
+    if input_repeats == "yes" or input_repeats == "yes, please":
+        repeats = int(input("How many times would you like to hear the rhythm? "))
+
+        if repeats < 1 or repeats > 8:
+            print("Can't do that, sorry. Please choose a number between 1 - 8")
+        else:
+            new_repeats = True
+    else:
+        new_repeats = True
+
+print(repeats)
+
+# ======== GENERATE RHYTHM ========
 
 # Make a sequence
 def gen_seq(max_steps):
@@ -91,7 +109,7 @@ print("hh durs: ", note_dur_hh)
 # Note durations to time stamps, depending on BPM
 def durations_to_time_stamps8th(durations_list):
    # Change quarter note_durs to 8ths
-    timestamps8th = [0]                                          # a 0 to start with because this is the first timestamp of the first note we'll hear.
+    timestamps8th = []                                          # a 0 to start with because this is the first timestamp of the first note we'll hear.
     timestamp_current = 0                                        # a variable that will later help with adding up the times to make a list of time stamps (8ths)
 
     for note_dur in range(len(durations_list)):
@@ -157,21 +175,46 @@ def handle_event (event):
     event['instrument'].play()
 
 
-# Tijd aflezen en vergelijken met timestamps (bron: wederom Semuel)
-while events:
-    current_time = time.time()
-    current_timestamp = events[0]['timestamp']
 
-    if(current_time - start_time >= current_timestamp):
-        simultaneous_events = []
+# List to temporarily store events
+temp_events = []
 
-        while events and events[0]['timestamp'] == current_timestamp:
-            simultaneous_events.append(events.pop(0))
-        for event in simultaneous_events:
-            handle_event(event)
-        
-    else:  
-        time.sleep(0.001)
+for i in range(repeats):
+    temp_events.extend(events)
+
+    passed_time = 0
+
+    if i != 0:
+        passed_time = (steps/(bpm*(1/30)))           # bpm afhankelijk
+
+    for event in temp_events:
+        event['timestamp'] = event['timestamp']  + passed_time
+    
+    #print("Passed time: ", passed_time)
+
+    print(i, steps, temp_events)
+
+    
+    # Tijd aflezen en vergelijken met timestamps (bron: wederom deels Semuel: multi_sample_sequencer.py and Ciska: 4d_dictionary_sorting_function.py)
+    while temp_events:
+        current_time = time.time()
+        current_timestamp = temp_events[0]['timestamp']
+        #print(current_timestamp)
+
+        if(current_time - start_time >= current_timestamp):
+            simultaneous_events = []
+
+            while temp_events and temp_events[0]['timestamp'] == current_timestamp:
+                simultaneous_events.append(temp_events.pop(0))
+                #print(simultaneous_events)
+            for event in simultaneous_events:
+                handle_event(event)
+            
+        else:  
+            time.sleep(0.001)
+    
+
+
 
 
 
