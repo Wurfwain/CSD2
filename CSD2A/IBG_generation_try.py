@@ -55,9 +55,6 @@ pulses = random.randint(2, steps)
 
 # Generate rhythm
 
-# Generating list of note durations
-print("pulses: ",pulses)
-
 # Make a sequence
 def gen_seq(steps, pulses):
     min_note_length = int(steps/pulses)
@@ -77,4 +74,8 @@ def gen_seq(steps, pulses):
     
     return seq
 
-print(gen_seq(steps, pulses))
+# Make 3 different sequences for the 3 instruments
+for i in range(3):
+    pulses = random.randint(2, steps)
+    print(gen_seq(steps, pulses))
+
