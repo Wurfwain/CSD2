@@ -8,11 +8,12 @@ step 3: transform timestamps to events
 step 4: play events
 step 5: store to MIDI? (user input)
 step 6: store and/or loop
-
-TO DO:
 - netjes maken: alles van tags voorzien
 - netjes maken: alle onzin weghalen
 - User path netjes afwerken
+
+TO DO:
+- MIDI fixen
 
 Wan tijd over:
 - work with off set?
@@ -27,16 +28,16 @@ import time
 import random
 from midiutil import MIDIFile
 
-# Load Samples
+# Load samples
 kick = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Kick1.wav")
 snare = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare1.wav")
 hihat = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat1.wav")
+
 # ======== INTRODUCTION ========
 print("Hi! Welcome to the Euclidean Random Beat Generator")
+print("You're going to create a beat. Please set the settings first.")
 
 run_program = True
-
-print("You're going to create a beat. Please set the settings first.")
 
 while run_program == True:
 
@@ -45,7 +46,8 @@ while run_program == True:
     bpm = 120
     print("Default BPM: ", bpm)
 
-    input_bpm = input("Would you like to change the BPM? yes/no: ").lower()         #Credits voor .lower() naar Semuel Leijten.
+    #Credits voor .lower() naar Semuel Leijten.
+    input_bpm = input("Would you like to change the BPM? yes/no: ").lower()
     new_bpm = False
 
     # Checking the BPM
@@ -58,13 +60,14 @@ while run_program == True:
             print("That might be a bit slow, we've sped it up to: ", bpm)
             break
         elif bpm > 240:
-            print("That might be a bit fast. Please choose a BPM under 241.")
+            print("That might be a bit fast. Please choose a BPM between 60 - 240.")
         else:
             new_bpm = True
             print("You've set the BPM to: ", int(bpm))
         
 
     # Determine time signature (give option between 5/4 (default) and 7/4)
+    # I wrote 5 * 2 and 7 * 2 to remember the time signature (5 or 7 over 4) and than work with 8ths.
     steps = 5*2
     print("Default time signature = 5/4")
     input_time_signature = input("Would you like to change this to 7/4? yes/no: ").lower()
@@ -81,31 +84,37 @@ while run_program == True:
     while new_repeats == False:
 
         if input_repeats == "yes" or input_repeats == "yes, please":
-            repeats = int(input("How many times would you like to hear the rhythm? "))
-
-            if repeats < 1 or repeats > 8:
-                print("Can't do that, sorry. Please choose a number between 1 - 8")
+            try:
+                repeats = int(input("How many times would you like to hear the rhythm? "))
+            except ValueError:
+                print("Please enter a number only")
             else:
-                new_repeats = True
+                if repeats < 1 or repeats > 8:
+                    print("Can't do that, sorry. Please choose a number between 1 - 8")
+                else:
+                    new_repeats = True
         else:
             new_repeats = True
 
     print(repeats)
 
+
     # ======== GENERATE RHYTHM ========
 
     # Make a sequence (source: Ciska Vriezenga)
     def gen_seq(max_steps):
+        # Choose random pulses with minimum of 2, otherwise it might be a bit boring
         pulses = random.randint(2, max_steps)
+        # Determine how long the notes (as integers) could be if equally divided.
         min_note_length = int(steps/pulses)
         seq = []
 
         for i in range(pulses):
             seq.append(min_note_length)
         
+        # Add the remainings of the division we did above.
         rest = steps - (pulses * min_note_length)
 
-        # Add the rest values to the list of minimun note lengths
         for i in range(rest):
             seq[i] += 1
         
@@ -115,61 +124,51 @@ while run_program == True:
         return seq
 
 
-
     # Make 3 different sequences for the 3 instruments
-    note_dur_kick = gen_seq(int(steps/2))       # /2 to make the kick and snare appair less often than the hh
+     # /2 to make the kick and snare appair less often than the hh
+    note_dur_kick = gen_seq(int(steps/2))
     note_dur_snare = gen_seq(int(steps/2))
     note_dur_hh = gen_seq(steps)
 
-    print("kick durs: ", note_dur_kick)
-    print("snare durs: ", note_dur_snare)
-    print("hh durs: ", note_dur_hh)
-
-
-
     # Note durations to time stamps, depending on BPM
     def durations_to_time_stamps8th(durations_list):
-    # Change quarter note_durs to 8ths
+        # Change quarter note_durs to 8ths
+        # A 0 to start with for the kick so that this is the first timestamp of the first note we'll hear.
         if durations_list == note_dur_kick:
-            timestamps8th = [0]                                      # a 0 to start with because this is the first timestamp of the first note we'll hear.
+            timestamps8th = [0]     
         else:
             timestamps8th = []
 
-        timestamp_current = 0                                        # a variable that will later help with adding up the times to make a list of time stamps (8ths)
+        # A variable that will later help with adding up the times to make a list of time stamps (8ths).
+        timestamp_current = 0   
 
         for note_dur in range(len(durations_list)):
             timestamp_new = durations_list.pop(0)
-            timestamp_current = timestamp_new + timestamp_current    # adding up the current timestamp with the new timestamp and defining this as the "new current" stamp so they keep adding up.
-            timestamps8th.append(timestamp_current)                  # every updated current timestamp is added to our final list of timestamps in 16ths.
+            # Adding up the current timestamp with the new timestamp and defining this as the "new current" stamp so they keep adding up.
+            timestamp_current = timestamp_new + timestamp_current
+            timestamps8th.append(timestamp_current)
     
-        eighth_note_duration = (60.0 / float(bpm)) / 2.0               # the duration of 1 8th is calculated, depending on the BPM
+        eighth_note_duration = (60.0 / float(bpm)) / 2.0
 
-        for i in range(len(timestamps8th)):                              # had to work with range(len(timestamps16ths)) because just timestamps16ths gave a float error
-            timestamps8th[i] = timestamps8th[i] * eighth_note_duration    # timestamps are created by multiplying timestamps16ths with the BPM-related sixteenth_note_duration
+        # Create 8th time stamps
+        # Note: Had to work with range(len(timestamps8ths)) because just timestamps8ths gave a float error.
+        for i in range(len(timestamps8th)):
+            timestamps8th[i] = timestamps8th[i] * eighth_note_duration
 
         return timestamps8th
 
-
-    # KAN OPTIMALER?
     # Function per instrument
     ts_kick = durations_to_time_stamps8th(note_dur_kick)
-    print("ts kick: ", ts_kick)
-
-    # Emptying the timestamps16th list before re-using the function:
+    # Emptying the timestamps16th list before re-using the function: (Source: Semuel Leijten)
     timestamps8th = [0] 
 
     ts_snare = durations_to_time_stamps8th(note_dur_snare)
-    print("ts snare: ", ts_snare)
-
     timestamps8th = [0] 
 
     ts_hh = durations_to_time_stamps8th(note_dur_hh)
-    print("ts hi-hat: ", ts_hh)
-
     timestamps8th = [0]
 
-    # HIER NOG MIDI INFO AAN TOEVOEGEN
-    # Make events (bron: Semuel: multi_sample_sequencer.py)
+    # Make events (Source: Semuel Leijten: multi_sample_sequencer.py)
     def make_events(timestamps, instrument):
         events = []
         for i in timestamps:
@@ -182,18 +181,17 @@ while run_program == True:
         return events
 
 
-    # (bron: Semuel: multi_sample_sequencer.py and Ciska: 4d_dictionary_sorting_function.py)
+    # (Source: Semuel Leijten: multi_sample_sequencer.py and Ciska Vriezenga: 4d_dictionary_sorting_function.py)
     def get_timestamps(event):
         return event['timestamp']
 
-    # Sort events (bron: Semuel: multi_sample_sequencer.py and Ciska: 4d_dictionary_sorting_function.py)
+    # Sort events (Source: Semuel Leijten: multi_sample_sequencer.py)
     events = make_events(ts_kick, kick) + make_events(ts_snare, snare) + make_events(ts_hh, hihat)
     events.sort(key=get_timestamps)
     #print(events)
 
-    # Function to play (bron: Semuel: multi_sample_sequencer.py and Ciska: 4d_dictionary_sorting_function.py)
+    # Function to play (bron: Semuel: multi_sample_sequencer.py and Ciska Vriezenga: 4d_dictionary_sorting_function.py)
     def handle_event (event):
-        #print("play!!")
         event['instrument'].play()
 
     # List to temporarily store events
@@ -208,7 +206,7 @@ while run_program == True:
         # We will ask the user for extra repetition later.
         rep = True
 
-        ######### Play according to timestamps
+        # Play according to timestamps
         start_time = time.time()
 
         for i in range(repeats):
@@ -217,36 +215,33 @@ while run_program == True:
             passed_time = 0
 
             if i != 0:
-                passed_time = (steps/(bpm*(1/30)))           # bpm afhankelijk
+                passed_time = (steps/(bpm*(1/30)))
 
             for event in temp_events:
                 event['timestamp'] = event['timestamp']  + passed_time
-            
-            #print("Passed time: ", passed_time)
 
-            ##print(i, steps, temp_events)
-
-            
-            # Tijd aflezen en vergelijken met timestamps (bron: wederom deels Semuel: multi_sample_sequencer.py and Ciska: 4d_dictionary_sorting_function.py)
+            # Read time and compare with timestamps
+            # (Source: Once again partly Semuel Leijten: multi_sample_sequencer.py and Ciska: 4d_dictionary_sorting_function.py)
             while temp_events:
                 current_time = time.time()
                 current_timestamp = temp_events[0]['timestamp']
-                #print(current_timestamp)
 
                 if(current_time - start_time >= current_timestamp):
                     simultaneous_events = []
 
+                    # Create a new list to make the samples play at the same time.
                     while temp_events and temp_events[0]['timestamp'] == current_timestamp:
                         simultaneous_events.append(temp_events.pop(0))
-                        #print(simultaneous_events)
                     for event in simultaneous_events:
                         handle_event(event)
                     
                 else:  
                     time.sleep(0.001)
         
-        time.sleep(1)   # for the last note to 'ring out'
+        # Sleep, for the last note to 'ring out'.
+        time.sleep(1)
 
+        # Ask for repition of the loop.
         while rep == True:
             play_again = input("Would you like to hear the rhythm again? yes/no: ").lower()
             
@@ -263,7 +258,7 @@ while run_program == True:
         
         
 
-    # ======== WRITING TO MIDI ======== (source: Ciska's Git and self)
+    # ======== WRITING TO MIDI ======== (source: Ciska Vriezenga's Git and self)
 
     kick_qnote_offset = 0
     snare_qnote_offset = 0
@@ -276,7 +271,6 @@ while run_program == True:
     velocity = 80
     track = 0
     channel = 9  # corresponds to channel 10 drums
-    #bpm = 120
 
     # create the MIDIfile object, to which we can add notes
     mf = MIDIFile(1)
@@ -284,17 +278,12 @@ while run_program == True:
     time_beginning = 0
     mf.addTempo(track, time_beginning, bpm)
 
-
-    # NOTE: DUPLICATE CODE below, would be better to place stuff below in a function
-
     def make_midi (durations, offset, bpm, midi_pitch, file_name):
-        # ___ add the kick durations to the note
-        # set the time to kick offset in case the kick does not start at the beginning
-        time = offset         # bijv: kick_qnote_offset
+        # ___ add the durations to the note
+        # set the time to offset in case the sample does not start at the beginning
+        time = offset
 
-
-        # add the notes for the kick
-        
+        # Add notes
         for dur in durations:
             mf.addNote(track, channel, midi_pitch, time, dur, velocity)
             # increment time based on the duration of the added note
