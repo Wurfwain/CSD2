@@ -1,47 +1,96 @@
 """ 
-The irregular beat generator
+Welcome to my irregular beat generator code.
+Have fun reading it.
+Small side note. I noticed two things I eventually haven't managed to fix:
 
-step 1: user input (BPM, maatsoort)
-step 2: generate rhythm (note seq)
-step 2.1: note dur to timestamps
-step 3: transform timestamps to events
-step 4: play events
-step 5: store to MIDI? (user input)
-step 6: store and/or loop
-- netjes maken: alles van tags voorzien
-- netjes maken: alle onzin weghalen
-- User path netjes afwerken
-
-TO DO:
-- MIDI fixen
-
-Wan tijd over:
-- work with off set?
-- keuze uit kits
-- kan het nog efficiënter?
-
-- Er gaat iets fout bij het maken van timestamps. Ik zou eiglk overal moeten beginnen met 0 en dan met off set moeten werken maar dat heb ik niet.
+- it seems to take a lot of time before the loops gets repeated when the user want to hear it again
+- Something goes wrong while creating the time stamps. 
+  I didn't work with off sets. That way I'm always a couple ms late with starting the loop.
+  It doesn't seem to go wrong with the MIDI though. The MIDI when imported in a DAW does start at 0.
+  So I guess it's good enough for a user. I don't see any other problems occur there, so it works.
 """
 # ======== PREPARATION ========
 import simpleaudio  as sa
 import time
 import random
+import os
 from midiutil import MIDIFile
 
 # Load samples
-kick = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Kick1.wav")
-snare = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare1.wav")
-hihat = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat1.wav")
+# Kit 1
+kick1 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Kick1.wav")
+snare1 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare1.wav")
+hihat1 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat1.wav")
+
+# Kit 2
+kick2 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Kick2.wav")
+snare2 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare2.wav")
+hihat2 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat2.wav")
+
+# Kit 3
+kick3 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Kick3.wav")
+snare3 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Snare3.wav")
+hihat3 = sa.WaveObject.from_wave_file("/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/Hihat3.wav")
 
 # ======== INTRODUCTION ========
 print("Hi! Welcome to the Euclidean Random Beat Generator")
+# Sleep for user to read
+time.sleep(1)
 print("You're going to create a beat. Please set the settings first.")
+time.sleep(1)
 
 run_program = True
 
 while run_program == True:
 
     # ======== USER INPUT ========
+
+    # Choose a kit
+    def show_kit(kit, kick_sample, snare_sample, hh_sample):
+        print("===", kit, "===")
+        print("- Kick")
+        kick_sample.play()
+        time.sleep(1)
+
+        print("- Snare")
+        snare_sample.play()
+        time.sleep(1)
+
+        print("- Hi-hat")
+        hh_sample.play()
+        time.sleep(0.5)
+
+    enter = input("You can choose a kit. Press enter to hear kit 1.")
+    if enter == "":
+        show_kit("Kit 1", kick1, snare1, hihat1)
+
+    enter = input("Please press enter to hear kit 2.")
+    if enter == "":
+        show_kit("Kit 2", kick2, snare2, hihat2)
+
+    enter = input("Please press enter to hear kit 3.")
+    if enter == "":
+        show_kit("Kit 3", kick3, snare3, hihat3)
+    
+    print("Which kit would you like to choose?:")
+    print("- Kit 1")
+    print("- Kit 2")
+    print("- Kit 3")
+    kit_choice = int(input("Choose 1/2/3: "))
+    
+    if kit_choice == 1:
+        kick = kick1
+        snare = snare1
+        hh = hihat1
+    elif kit_choice == 2:
+        kick = kick2
+        snare = snare2
+        hh = hihat2
+    else:
+        kick = kick3
+        snare = snare3
+        hh = hihat3
+
     # Determine BPM
     bpm = 120
     print("Default BPM: ", bpm)
@@ -130,14 +179,25 @@ while run_program == True:
     note_dur_snare = gen_seq(int(steps/2))
     note_dur_hh = gen_seq(steps)
 
+    # Make lists that won't be popped later, to use for MIDI at the end.
+    def make_def_note_durs(note_durs):
+        note_durs_def = []
+        note_durs_def.extend(note_durs)
+        
+        # Note durs /2
+        for dur in note_durs_def:
+            note_durs_def.append(note_durs_def.pop(0)/2)
+        
+        return note_durs_def
+
+    note_dur_kick_def = make_def_note_durs(note_dur_kick)
+    note_dur_snare_def = make_def_note_durs(note_dur_snare)
+    note_dur_hh_def = make_def_note_durs(note_dur_hh)
+
     # Note durations to time stamps, depending on BPM
     def durations_to_time_stamps8th(durations_list):
         # Change quarter note_durs to 8ths
-        # A 0 to start with for the kick so that this is the first timestamp of the first note we'll hear.
-        if durations_list == note_dur_kick:
-            timestamps8th = [0]     
-        else:
-            timestamps8th = []
+        timestamps8th = []
 
         # A variable that will later help with adding up the times to make a list of time stamps (8ths).
         timestamp_current = 0   
@@ -260,12 +320,9 @@ while run_program == True:
 
     # ======== WRITING TO MIDI ======== (source: Ciska Vriezenga's Git and self)
 
-    kick_qnote_offset = 0
-    snare_qnote_offset = 0
-    hh_qnote_offset = 0
     kick_midi_pitch = 35
     snare_midi_pitch = 38
-    hh_midi_pitch = 41
+    hh_midi_pitch = 42
 
     # set the necessary values for MIDI util
     velocity = 80
@@ -278,10 +335,9 @@ while run_program == True:
     time_beginning = 0
     mf.addTempo(track, time_beginning, bpm)
 
-    def make_midi (durations, offset, bpm, midi_pitch, file_name):
+    def make_midi (durations, bpm, midi_pitch, file_name):
         # ___ add the durations to the note
-        # set the time to offset in case the sample does not start at the beginning
-        time = offset
+        time = 0
 
         # Add notes
         for dur in durations:
@@ -289,8 +345,6 @@ while run_program == True:
             # increment time based on the duration of the added note
             time = time + dur
 
-        with open(f"/Users/aureliawurfbain/Documents/HKU/Jaar_2/CSD2/python_basics/MIDI_files/{file_name}.midi",'wb') as outf:     # TO DO: file path maken en documentnaam
-                mf.writeFile(outf)
 
     # User input: Does the user want to store?
     store = True
@@ -303,11 +357,17 @@ while run_program == True:
                 print("How would you like to name the file? ")
                 file_name = input("File name: ")
 
-                make_midi(note_dur_kick, kick_qnote_offset, bpm, kick_midi_pitch, file_name)
-                make_midi(note_dur_snare, snare_qnote_offset, bpm, snare_midi_pitch, file_name)
-                make_midi(note_dur_hh, hh_qnote_offset, bpm, hh_midi_pitch, file_name)
+                make_midi(note_dur_kick_def, bpm, kick_midi_pitch, file_name)
+                make_midi(note_dur_snare_def, bpm, snare_midi_pitch, file_name)
+                make_midi(note_dur_hh_def, bpm, hh_midi_pitch, file_name)
+        
+                # Store the file in Downloads (Source: Cas Huurdeman)
+                with open(os.path.expanduser('~') + f"/Downloads/{file_name}.midi", "wb") as outf:
+                    mf.writeFile(outf)
 
-                print("Thank you! Your MIDI file is now stored with the name: ", file_name)
+                print("Thank you! Your MIDI file is now stored with the name  ", file_name, "  in your downloadfolder.")
+                # Little pause for the user to read.
+                time.sleep(2)
                 store = False
             else:
                 store = False
@@ -325,7 +385,9 @@ while run_program == True:
         if enthousiasm == "no" or enthousiasm == "yes":
             if enthousiasm == "no":
                 print("Thanks for using the Euclidean Random Beat Generator.")
+                time.sleep(1)
                 print("Hope you enjoyed it. See you next time!")
+                time.sleep(1)
                 print("Program done.")
                 run_program = False
                 break
