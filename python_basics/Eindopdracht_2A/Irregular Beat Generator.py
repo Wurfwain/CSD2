@@ -246,7 +246,7 @@ while run_program == True:
         return event['timestamp']
 
     # Sort events (Source: Semuel Leijten: multi_sample_sequencer.py)
-    events = make_events(ts_kick, kick) + make_events(ts_snare, snare) + make_events(ts_hh, hihat)
+    events = make_events(ts_kick, kick) + make_events(ts_snare, snare) + make_events(ts_hh, hh)
     events.sort(key=get_timestamps)
     #print(events)
 
