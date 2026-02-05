@@ -1,6 +1,6 @@
 # Voortgang logboek synthSong
 
-### Week 6 (totaal 5.5u)
+### Week 6 (totaal 7.5u)
 ##### Maandag: 
 _2 uur_ - inkomen. Waar was ik? Herhaling delegating constructors en overloading.
 Hoeveel kan ik met mijn handen? - Vastlopen met JUCE en om hulp vragen. Gestrand bij 5_soundingSine niet kunnen builden.
