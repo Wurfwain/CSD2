@@ -16,5 +16,19 @@ overhoud kan ik altijd nog naar nieuwe FX kijken maar voor nu: KISS.
 
 
 ### Parameters:
+In de afbeelding hieronder is weergegeven hoe de parameters veranderen met het aanpassen van de macroknop.
+- De onderste lijn (groen) is de __macro__ en die loopt van 0 naar 1.0. Bij 0 staat het effect uit, bij 1.0 is die 
+volledig aan.
+- De bovenste lijn (paars) is de __wet van de delay__. In het voorbeeld loopt deze tot 64% maar ik zal zien hoe dat
+in mijn ontwerp uitpakt. De stijging loopt in ieder geval gelijk met de macro.
+- De 2e lijn van boven (lichtblauw) is de __snelheid van de vibrato__ in Hz. Deze neemt toe vanaf ongeveer 0.5
+van de macro.
+- De 3e lijn van boven (oranje) is de __vibrato diepte__. Deze bereikt de 100% al rond de 0.6 van de macro.
+- De 4e lijn van boven (ook groen) is de __vervorming van de waveshaper__. In het voorbeeld is een drive gebruikt maar
+het idee is vergelijkbaar. De vervorming is op de max (de max die ik wil, misschien niet het maximaal mogelijke) rond
+de 0.8 van de macro. Je ziet ook dat de vervorming pas vanaf ongeveer 0.1 van de macro begint.
+Misschien laat ik die in mijn ontwerp wel gewoon van 0 tot 1 lopen ipv 0.1 tot 0.8, we gaan het zien.
+- De 5e (roze/paars) is de __feedback__ van de delay. Deze komt pas in op 0.5 van de macro en ik zal moeten playtesten
+om te zien tot hoe hoog ik die daadwerkelijk ga laten lopen. In het voorbeeld vond ik 84% goed werken.
 
 ![parameters](parameters.png "parameters")
