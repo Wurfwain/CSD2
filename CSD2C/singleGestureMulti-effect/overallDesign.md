@@ -1,21 +1,20 @@
 # Overall design deliverable
 ### Chosen focus:
-Ik kies voor de plugin focus. Ik denk dat deze keuze voor mij het meeste rust en focus gaat geven komend blok.
-De andere opties vragen misschien wat extra's, terwijl het hebben van 1 effect wellicht alweer een basis vormt voor de
-volgende. Zo kan ik voortbouwen zonder side tracks. Ik denk dat ik dat goed kan gebruiken.
-Ik ben ook benieuwd naar de wiskunde achter effecten, die ga ik dan ontdekken.
+In overleg met Ciska kies ik voor de custom focus, waarbij mijn custom de melody generation van 2b is die ik nog moet 
+inhalen. Zo kan ik 2b en 2c combineren zonder al te veel achter te blijven lopen.
 
 ### Chosen effects:
-- Het lijkt me tof (en haalbaar) om en een __chorus__ en/of een __vibrato__ te maken, omdat dat 2 van mijn favoriete effecten
-zijn om toe te passen op bijvoorbeeld gitaar of keys. Alles wordt er dreamy van en daar hou ik van!
-- De __tremolo__ en de __waveshaper__ zijn voorbij gekomen in de les en spreken me ook aan.
-Door zowel hun simpliciteit als hun karakter.
-- Net zo haalbaar en misschien ook wel grappig is een __LFO-based auto-panner__. Ik denk dat deze effecten samen voor
-een leuke chaos kunnen zorgen.
-- Ik ben ook nieuwsgierig naar __filters__ maar weet nog niet precies welke ik zou willen doen. Het liefst in ieder geval 1.
-- Ik weet niet precies wat een __grain delay__ is maar die klinkt ook vet. Verder zou ik een __reverb__ heel tof vinden
-maar ik merk ook dat ik het spannend vind om nu al te commiten aan iets wat misschien te hooggegrepen is voor me
-  (timewise, aangezien ik veel moet inhalen).
+De custom focus betekent 3 FX punten minimaal. Voor 2b maak ik een simpele organ synth mbv square waves, dus ik kies
+voor effecten die ik leuk aan vind sluiten bij dit geluid.
+- Het lijkt me tof (en haalbaar) om en een __vibrato__(1) te maken, omdat het 1 van mijn favoriete effecten
+is en omdat het mooi samengaat met een organ. I like it dreamy!
+- De __waveshaper__(1) is voorbij gekomen in de les en spreekt me ook aan.
+Door zowel de simpliciteit als het karakter. Overstuurde orgels zijn niet ongebruikelijk maar wel heel vet.
+- Een mooie derde toevoeging lijkt me een __feedback delay__(2). Enerzijds om het extra dreamy en groots te maken en
+anderzijds omdat ik denk dat het bouwen daarvan haalbaar moet zijn voor mij met de tijd die ik heb. Als ik tijd
+overhoud kan ik altijd nog naar nieuwe FX kijken maar voor nu: KISS.
+
 
 ### Parameters:
-Yet TODO...
+
+![parameters](parameters.png "parameters")
