@@ -18,15 +18,11 @@ public:
 
 private:
   AdditiveSynth organ;
+
   WaveShaper waveshaper;
   Delay delay[2];
-
-  //Credits DAAN
-  Delay delay2[2] {
-    Delay{0.0, 1000, 44100, 1.0},
-    Delay{ 0.0, 1000, 44100, 1.0}
-  };
   Vibrato vibrato;
+
   double samplerate;
 };
 

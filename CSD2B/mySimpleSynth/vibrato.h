@@ -6,6 +6,8 @@
 #define VIBRATO_H
 
 #include "effect.h"
+#include "sine.h"
+#include "delay.h"
 
 
 class Vibrato : public Effect
@@ -19,6 +21,9 @@ public:
   void tick();
   float getLfo();
 
+protected:
+    Sine* sine;
+    Delay* vibDelay;
 
 private:
     float lfoFreq = 5.0;

@@ -10,4 +10,8 @@ Sine::Sine (float frequency, float samplerate)
   std::cout << "Sine::Sine constructor\n";
 }
 
-void Sine::calculate() { sample = sin (M_PI * 2 * phase) * amplitude; }
+void Sine::calculate() {
+  sample = sin (M_PI * 2 * phase);
+  //std::cout << "phase " << phase << "\n";
+  //std::cout << "Sample: " << sample << "\n";
+}

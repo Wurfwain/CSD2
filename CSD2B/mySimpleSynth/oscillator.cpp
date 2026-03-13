@@ -7,7 +7,8 @@ Oscillator::Oscillator (float frequency, float samplerate)
     phase (0),
     sample (0),
     samplerate (samplerate) {
-  std::cout << "Oscillator - constructor\n" << "Samplerate: " << samplerate;
+  std::cout << "Oscillator - constructor\n" << "Samplerate: " << samplerate << "\n";
+  std::cout << "Frequency: " << frequency << "\n";
 }
 
 
@@ -37,7 +38,7 @@ void Oscillator::tick() {
   phase += frequency / samplerate;
   // wrap the phase to interval [0, 1]
   if (phase > 1) phase -= 1.0f;
-  //std::cout << "Phase : " << phase << " and sample: " << sample << std::endl;
+  //std::cout << "Phase: " << phase << " and freq: " << frequency << std::endl;
 
   // calculate sample for the incremented phase
   calculate();
