@@ -8,6 +8,9 @@ void CustomCallback::prepare (int samplerate) {
   this->samplerate = samplerate;
   std::cout << "\nsamplerate: " << samplerate << "\n";
   organ.setFrequencies();
+  melodyGenerator.generateIndexList(true, 15);
+  melodyGenerator.generateMelodyList();
+
   /*
   for (int i = 0; i < 2; i++) {
     delay2[i+1].setNumDelaySamples(33010);
