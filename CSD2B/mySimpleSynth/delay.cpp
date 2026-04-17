@@ -17,8 +17,6 @@ Delay::Delay(float feedback, uint numDelaySamples,
   m_buffer = (float*)malloc(maxDelaySize * sizeof(float));
   memset(m_buffer, 0, m_size * sizeof(float));
 
-  std::cout << "dryWet: " << dryWet << std::endl;
-  //<< "\nmaxDelaySize: " << maxDelaySize << std::endl;
 }
 
 Delay::~Delay()
@@ -57,7 +55,7 @@ void Delay::setFeedback(float feedback)
     throw "Delay::setFeedback - feedback exceeds range [0, 1]";
   }
   m_feedback = feedback;
-  std::cout << "Feedback: " << feedback << std::endl;
+  //std::cout << "Feedback: " << feedback << std::endl;
 }
 
 float Delay::getNumDelaySamples(float num)

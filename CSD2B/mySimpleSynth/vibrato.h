@@ -26,7 +26,7 @@ protected:
     Delay* vibDelay;
 
 private:
-    float lfoFreq = 5.0;
+    float lfoFreq = 7.0;
     float phase;
     //TODO: samplerate setten in prepare van callback?
     float samplerate = 44100;

@@ -8,7 +8,7 @@
 AdditiveSynth::AdditiveSynth() {
     for (int i = 0; i < numOscs; i++) {
         oscs[i] = new Square();
-        std::cout << "Square " << i + 1 << " was created\n";
+        //std::cout << "Square " << i + 1 << " was created\n";
     }
 }
 
@@ -47,11 +47,11 @@ float AdditiveSynth::getSample() {
     return sample;
 }
 
-void AdditiveSynth::setFrequencies(){
+void AdditiveSynth::setFrequencies(float freq){
   //TODO: duplicated code, miss oplossen met forloop en list
-  oscs[0]->setFrequency(baseFreq);
+  oscs[0]->setFrequency(freq);
   //apparently 440.0*(3/2) doesn't give 660, but 440. Donno why but in this order it works though:
-  oscs[1]->setFrequency((3.0/2.0) * baseFreq);
-  oscs[2]->setFrequency((3.01/2.0) * baseFreq);
+  oscs[1]->setFrequency((3.0/2.0) * freq);
+  oscs[2]->setFrequency((3.01/2.0) * freq);
 }
 

@@ -7,7 +7,7 @@ class Delay : public Effect
 {
 public:
   Delay(float feedback = 0.5, uint numDelaySamples = 22050,
-    uint maxDelaySize = 44100, float dryWet = 0.5);
+    uint maxDelaySize = 44100, float dryWet = 0.3);
   ~Delay();
 
   // override base class method

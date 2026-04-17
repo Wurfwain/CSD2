@@ -17,7 +17,7 @@ class AdditiveSynth {
     float getSample();
     //virtual void calculate() = 0;
 
-    void setFrequencies();
+    void setFrequencies(float freq);
 
     protected:
     //From Vida's code

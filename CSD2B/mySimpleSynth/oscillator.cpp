@@ -7,8 +7,8 @@ Oscillator::Oscillator (float frequency, float samplerate)
     phase (0),
     sample (0),
     samplerate (samplerate) {
-  std::cout << "Oscillator - constructor\n" << "Samplerate: " << samplerate << "\n";
-  std::cout << "Frequency: " << frequency << "\n";
+  //std::cout << "Oscillator - constructor\n" << "Samplerate: " << samplerate << "\n";
+  //std::cout << "Frequency: " << frequency << "\n";
 }
 
 
@@ -28,7 +28,7 @@ void Oscillator::setFrequency (float frequency) {
   // TODO
   // add check to see if parameter is valid
   this->frequency = frequency;
-  std::cout << "Frequency is set to: " << frequency << std::endl;
+  //std::cout << "Frequency is set to: " << frequency << std::endl;
 }
 
 float Oscillator::getFrequency() { return frequency; }

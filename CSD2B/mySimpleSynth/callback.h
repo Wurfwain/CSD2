@@ -10,6 +10,8 @@
 #include "delay.h"
 #include "vibrato.h"
 #include "melodyGenerator.h"
+#include "melody.h"
+#include "filter.h"
 
 class CustomCallback : public AudioCallback {
 public:
@@ -19,11 +21,12 @@ public:
 
 private:
   AdditiveSynth organ;
-  MelodyGenerator melodyGenerator;
+  Melody melody;
 
   WaveShaper waveshaper;
   Delay delay[2];
   Vibrato vibrato;
+  Filter filter;
 
   double samplerate;
 };

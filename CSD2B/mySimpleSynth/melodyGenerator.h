@@ -4,8 +4,8 @@
 
 #ifndef MELODYGENERATOR_H
 #define MELODYGENERATOR_H
-
-
+#include "note.h"
+#include <vector>
 
 class MelodyGenerator {
 public:
@@ -13,8 +13,10 @@ public:
   ~MelodyGenerator();
 
   void generateIndexList(bool goesUp, int range);
-  void generateMelodyList();
-  int getMelodyList();
+  std::vector<Note> generateMelodyList();
+  std::vector<Note> tempNotesVector;
+
+  int getMelodyLength();
 
 private:
   int direction = 1;
@@ -23,9 +25,10 @@ private:
   int noteDelta;
   int incr = 0;
   int curNote;
-  int ladderList[15] = {60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83, 84};
-  int* indexList;
-  int* melodyList;
+  int ladderList[15] = {50, 52, 54, 55, 57, 59, 61, 62, 64, 66, 67, 69, 71, 73, 74};
+  std::vector<int> indexList;
+  int melodyList;
+
 
 };
 

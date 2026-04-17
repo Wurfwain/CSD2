@@ -6,17 +6,15 @@ CustomCallback::CustomCallback (float samplerate)
 
 void CustomCallback::prepare (int samplerate) {
   this->samplerate = samplerate;
-  std::cout << "\nsamplerate: " << samplerate << "\n";
-  organ.setFrequencies();
-  melodyGenerator.generateIndexList(true, 15);
-  melodyGenerator.generateMelodyList();
 
-  /*
-  for (int i = 0; i < 2; i++) {
-    delay2[i+1].setNumDelaySamples(33010);
-    delay2[i+1].setFeedback(0.7);
-  }
-  */
+  melody.prepare(samplerate);
+
+  // set start frequency
+  Note currentNote = melody.getCurrentNote();
+  organ.setFrequencies(currentNote.getPitch());
+
+  filter.setDryWet(0.9);
+
 }
 
 void CustomCallback::process (AudioBuffer buffer) {
@@ -30,7 +28,9 @@ void CustomCallback::process (AudioBuffer buffer) {
   float sample = 0.0f;
   float vibSample = 0.0f;
   float shapedSample = 0.0f;
+  float shapedFilteredSample = 0.0f;
   float delayedShapedSample = 0.0f;
+
   int incr = 0;
   int numDS = 0;
 
@@ -40,19 +40,29 @@ void CustomCallback::process (AudioBuffer buffer) {
 
     vibrato.processFrame(curSample, vibSample);
     waveshaper.processFrame(vibSample, shapedSample);
+    filter.processFrame(shapedSample, shapedFilteredSample);
 
 
     //if (incr <= 10) {std::cout << "numDelaySamples = " << delay2[1].getNumDelaySamples(numDS) << std::endl;}
     //if (incr < 10) {delay2[1].getReadH(rHead), std::cout << "readHead: " << rHead << "\n";}
     for (int channel = 0u; channel < numOutputChannels; ++channel) {
       //outputChannels[channel][frame] = 0.0f;
-      delay[channel].processFrame(shapedSample, delayedShapedSample);
-      sample = vibSample;
+      delay[channel].processFrame(shapedFilteredSample, delayedShapedSample);
+      sample = delayedShapedSample;
       outputChannels[channel][frame] = sample;
 
     }
     //if (incr <= 10 ) {std::cout << "sample: " << sample << std::endl;}
     organ.tick();
     incr++;
+
+    // melody.tick returns true when a new note is reached
+    if (melody.tick()) {
+      /* NOTE: retrieving a copy of note, would be better to use a pointer,
+       * but usage of pointers is out of scope for now.
+       */
+      Note note = melody.getCurrentNote();
+      organ.setFrequencies(note.getPitch());
+    }
   }
 }
