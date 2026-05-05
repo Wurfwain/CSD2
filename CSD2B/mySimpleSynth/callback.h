@@ -2,16 +2,9 @@
 #define CALLBACK_H
 
 #include "audiocomponent.h"
-#include "oscillator.h"
-#include "sine.h"
-#include "square.h"
 #include "additiveSynth.h"
-#include "waveShaper.h"
-#include "delay.h"
-#include "vibrato.h"
-#include "melodyGenerator.h"
 #include "melody.h"
-#include "filter.h"
+
 
 class CustomCallback : public AudioCallback {
 public:
@@ -20,15 +13,10 @@ public:
   void process (AudioBuffer buffer) override;
 
 private:
+  double samplerate;
+
   AdditiveSynth organ;
   Melody melody;
-
-  WaveShaper waveshaper;
-  Delay delay[2];
-  Vibrato vibrato;
-  Filter filter;
-
-  double samplerate;
 };
 
 #endif  //CALLBACK_H

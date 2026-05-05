@@ -1,6 +1,5 @@
 #ifndef _Oscillator_H_
 #define _Oscillator_H_
-#include <iostream>
 
 class Oscillator {
 public:

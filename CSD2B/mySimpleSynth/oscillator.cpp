@@ -1,5 +1,4 @@
 #include "oscillator.h"
-#include "math.h"
 
 Oscillator::Oscillator (float frequency, float samplerate)
   : frequency (frequency),
@@ -7,20 +6,18 @@ Oscillator::Oscillator (float frequency, float samplerate)
     phase (0),
     sample (0),
     samplerate (samplerate) {
-  //std::cout << "Oscillator - constructor\n" << "Samplerate: " << samplerate << "\n";
-  //std::cout << "Frequency: " << frequency << "\n";
 }
 
 
-Oscillator::~Oscillator() { std::cout << "Oscillator - destructor\n"; }
+Oscillator::~Oscillator() {}
 
 void Oscillator::setSamplerate (float samplerate) {
   this->samplerate = samplerate;
 }
 
 float Oscillator::getSample() {
-  //if (phase == 0.0) std::cout << "Sample: " << sample << " and frequency : " << frequency << std::endl;
-  return sample; }
+  return sample;
+}
 
 
 //getters and setters
@@ -38,7 +35,6 @@ void Oscillator::tick() {
   phase += frequency / samplerate;
   // wrap the phase to interval [0, 1]
   if (phase > 1) phase -= 1.0f;
-  //std::cout << "Phase: " << phase << " and freq: " << frequency << std::endl;
 
   // calculate sample for the incremented phase
   calculate();

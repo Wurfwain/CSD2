@@ -6,16 +6,9 @@
 #include <random>
 #include <vector>
 
-MelodyGenerator::MelodyGenerator(){
-}
+MelodyGenerator::MelodyGenerator(){}
 
-
-MelodyGenerator::~MelodyGenerator(){
-  //delete[] indexList;
-  std::cout << "MelodyGenerator::~MelodyGenerator()" << std::endl;
-  //delete melodyList;
-}
-
+MelodyGenerator::~MelodyGenerator(){}
 
 //TODO: naamgevingen
 
@@ -25,7 +18,6 @@ std::vector<Note> MelodyGenerator::generateMelodyList(){
   generateIndexList(true, 14);
 
   //veel ruzie gehad met pointers, dus ik gebruik vectors
-  //melodyList = new int[indexListSize];
   std::cout << "\nGenerating melody list..." << std::endl;
 
   for (int i = 0; i < indexListSize; i++) {
