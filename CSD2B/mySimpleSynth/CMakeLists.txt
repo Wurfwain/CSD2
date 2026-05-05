@@ -2,7 +2,7 @@
 project(mySimpleSynth VERSION 0.0.1)
 juce_add_console_app(${PROJECT_NAME} PRODUCT_NAME "example")
 target_sources(${PROJECT_NAME} PRIVATE main.cpp oscillator.cpp sine.cpp square.cpp callback.cpp
-        additiveSynth.cpp melodyGenerator.cpp
+        additiveSynth.cpp melodyGenerator.cpp utilities.cpp
         melody.cpp note.cpp)
 target_compile_definitions(${PROJECT_NAME} PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 

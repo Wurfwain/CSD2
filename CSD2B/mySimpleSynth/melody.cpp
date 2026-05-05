@@ -49,9 +49,4 @@ bool Melody::tick()
 
 void Melody::setMelody(std::vector<Note> newMelody) {
   notes = newMelody;
-  std::cout << "notes size: " << notes.size() << std::endl;
-
-  for (auto & note : notes) {
-    note.print();
-  }
 }

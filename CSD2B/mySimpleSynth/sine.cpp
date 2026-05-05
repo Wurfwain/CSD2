@@ -11,6 +11,4 @@ Sine::Sine (float frequency, float samplerate)
 
 void Sine::calculate() {
   sample = sin (M_PI * 2 * phase);
-  //std::cout << "phase " << phase << "\n";
-  //std::cout << "Sample: " << sample << "\n";
 }

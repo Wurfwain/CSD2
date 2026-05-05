@@ -22,7 +22,6 @@ std::vector<Note> MelodyGenerator::generateMelodyList(){
 
   for (int i = 0; i < indexListSize; i++) {
     melodyList = ladderList[indexList[i]];
-    std::cout << melodyList << std::endl;
     tempNotesVector.emplace_back(melodyList);
   }
 
@@ -31,11 +30,6 @@ std::vector<Note> MelodyGenerator::generateMelodyList(){
 
 
 void MelodyGenerator::generateIndexList(bool goesUp, int range){
-  std::cout << "========================" << std::endl;
-  std::cout << "Generating index list..." << std::endl;
-  std::cout << "========================" << std::endl;
-  std::cout << "Range: " << range << std::endl;
-
   if (!goesUp){direction = -1;}
   range *= direction;
 
@@ -81,12 +75,6 @@ void MelodyGenerator::generateIndexList(bool goesUp, int range){
     indexList.push_back(curNote);
   }
   indexListSize = incr + 1;
-  std::cout << "Increment: " << incr << std::endl;
-  std::cout << "Temp list: " << std::endl;
-  for (int i = 0; i < indexListSize; i++) {
-    std::cout << "#" << i << " = " << indexList[i] << std::endl;
-  }
-  std::cout << "indexListSize = " << indexList.size() << std::endl;
 
   //De lijst die hieruit komt is langer dan indexListSize en bevat trash, is dat erg??
 }
