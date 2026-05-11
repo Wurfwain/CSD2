@@ -4,14 +4,13 @@
 
 #ifndef NOTE_H
 #define NOTE_H
-//TODO - include math instead of juce for usage of pow function
+
 #include "juce_audio_basics/juce_audio_basics.h"
 #include "juce_audio_devices/juce_audio_devices.h"
 
 
 class Note {
 public:
-  // Detune is not supported, if required, add 'cents'
   Note();
 
   Note(int midiNoteNumber);

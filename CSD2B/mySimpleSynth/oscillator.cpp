@@ -20,22 +20,15 @@ float Oscillator::getSample() {
 }
 
 
-//getters and setters
 void Oscillator::setFrequency (float frequency) {
-  // TODO
-  // add check to see if parameter is valid
   this->frequency = frequency;
-  //std::cout << "Frequency is set to: " << frequency << std::endl;
 }
 
 float Oscillator::getFrequency() { return frequency; }
 
 void Oscillator::tick() {
-  // increment the phase to allow calculation of next sample
   phase += frequency / samplerate;
-  // wrap the phase to interval [0, 1]
   if (phase > 1) phase -= 1.0f;
 
-  // calculate sample for the incremented phase
   calculate();
 }

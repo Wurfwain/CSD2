@@ -10,51 +10,48 @@ MelodyGenerator::MelodyGenerator(){}
 
 MelodyGenerator::~MelodyGenerator(){}
 
-//TODO: naamgevingen
+//TODO: naamgevingen en opmerkingen
 
 
-std::vector<Note> MelodyGenerator::generateMelodyList(){
-  //Eerst maken we een index list, die we om kunnen zetten naar een melody list
-  generateIndexList(true, 14);
+std::vector<Note> MelodyGenerator::generateMelodyList(int maj, int scale, bool goesUp){
+  //First we make an index list, which we can transform into a melody list
+  generateIndexList(14, goesUp);
 
-  //veel ruzie gehad met pointers, dus ik gebruik vectors
-  std::cout << "\nGenerating melody list..." << std::endl;
-
-  for (int i = 0; i < indexListSize; i++) {
-    melodyList = ladderList[indexList[i]];
-    tempNotesVector.emplace_back(melodyList);
+  if (maj == 1) {
+    for (int i = 0; i < indexListSize; i++) {
+      tempNotesVector.emplace_back(ladderListMaj[indexList[i]] + scale);
+    }
+  } else {
+    for (int i = 0; i < indexListSize; i++) {
+      tempNotesVector.emplace_back(ladderListMix[indexList[i]] + scale);
+    }
   }
-
   return tempNotesVector;
 }
 
 
-void MelodyGenerator::generateIndexList(bool goesUp, int range){
-  if (!goesUp){direction = -1;}
+void MelodyGenerator::generateIndexList(int range, bool goesUp){
+  if (!goesUp) {direction = -1;}
   range *= direction;
 
-  //We maken een lijst waarmee we later uit een lijst die overeenkomt met een toonsoort elementen kunnen kiezen.
-  //Deze mag in waardes niet over de grootte van de toonsoortlijst komen. Het grootst mogelijke getal is dus "sizeof",
-  //ofwel "range".
-  //Eerste waarde wordt de beginnoot
+  //Creating index list (with root note as first note)
   curNote = 0;
   incr = 0;
   indexList.push_back(curNote);
 
-  while (indexList[incr] < range - 3){
+  while ((indexList[incr] * direction) - range >= 3 || (indexList[incr] * direction) - range <= -3){
     //Random #1
     std::random_device rd;
     std::uniform_real_distribution<double> dist(0.0, 1.0);
     float randomValue = dist(rd);
 
-    //Stap 1 van generatie
+    //Step 1 of generation
     if (randomValue < 0.5){
       noteDelta = 2;
     } else {
       noteDelta = 3;
     }
 
-    //Nieuwe waarde "curNote" toevoegen aan de lijst op de juiste plek mbv "incr".
     curNote += noteDelta;
     incr++;
     indexList.push_back(curNote);
@@ -62,21 +59,31 @@ void MelodyGenerator::generateIndexList(bool goesUp, int range){
     //Random #2
     randomValue = dist(rd);
 
-    //Stap 2 van generatie
+    //Step 2 of generation
     if (randomValue < 0.5){
       noteDelta = -1;
     } else {
       noteDelta = 1;
     }
 
-    //Nieuwe waarde weer toevoegen.
     curNote += noteDelta;
     incr++;
     indexList.push_back(curNote);
   }
+
   indexListSize = incr + 1;
 
-  //De lijst die hieruit komt is langer dan indexListSize en bevat trash, is dat erg??
+  if (!goesUp) {
+    for (int i = 0; i < indexListSize; i++) {
+      indexList[i] = -indexList[i] + indexList[indexListSize - 1] + 1;
+    }
+  }
+
+  //Add the high root note to the list if it wasn't created by chance
+  if (!goesUp && indexList[0] != 14) {
+    indexList.insert(indexList.begin(), 14);
+    indexListSize++;
+  }
 }
 
 int MelodyGenerator::getMelodyLength() {

@@ -7,7 +7,6 @@
 
 Square::Square (float frequency, float samplerate)
   : Oscillator (frequency, samplerate) {
-  //std::cout << "Square::Square constructor\n";
 }
 
 void Square::calculate() {

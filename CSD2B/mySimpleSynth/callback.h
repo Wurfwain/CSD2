@@ -4,6 +4,7 @@
 #include "audiocomponent.h"
 #include "additiveSynth.h"
 #include "melody.h"
+#include "utilities.h"
 
 
 class CustomCallback : public AudioCallback {
@@ -14,6 +15,7 @@ public:
 
 private:
   double samplerate;
+  Utilities utilities;
 
   AdditiveSynth organ;
   Melody melody;

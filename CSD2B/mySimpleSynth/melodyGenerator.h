@@ -12,8 +12,8 @@ public:
   MelodyGenerator();
   ~MelodyGenerator();
 
-  void generateIndexList(bool goesUp, int range);
-  std::vector<Note> generateMelodyList();
+  void generateIndexList(int range, bool goesUp);
+  std::vector<Note> generateMelodyList(int maj, int scale, bool goesUp);
   std::vector<Note> tempNotesVector;
 
   int getMelodyLength();
@@ -25,10 +25,10 @@ private:
   int noteDelta;
   int incr = 0;
   int curNote;
-  int ladderList[15] = {50, 52, 54, 55, 57, 59, 61, 62, 64, 66, 67, 69, 71, 73, 74};
+  int ladderListMaj[15] = {48, 50, 52, 53, 55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72};
+  int ladderListMix[15] = {48, 50, 52, 53, 55, 57, 58, 60, 62, 64, 65, 67, 69, 70, 72};
   std::vector<int> indexList;
   int melodyList;
-
 
 };
 

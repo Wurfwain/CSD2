@@ -6,7 +6,15 @@ CustomCallback::CustomCallback (float samplerate)
 
 void CustomCallback::prepare (int samplerate) {
   this->samplerate = samplerate;
-  melody.prepare(samplerate);
+
+  std::cout << "\n=====================================\n"
+    << ">>> Welcome! Let's create an arp. <<<\n" <<
+      "=====================================\n\n";
+
+  int scaleType = utilities.retrieveScaleTypeSelection();
+  int scale = utilities.retrieveScaleSelection();
+  int direction = utilities.retrieveDirection();
+  melody.prepare(samplerate, scaleType, scale, direction);
 
   // set start frequency
   Note currentNote = melody.getCurrentNote();
@@ -27,7 +35,6 @@ void CustomCallback::process (AudioBuffer buffer) {
 
     organ.tick();
 
-    // melody.tick returns true when a new note is reached
     if (melody.tick()) {
       Note note = melody.getCurrentNote();
       organ.setFrequencies(note.getPitch());
