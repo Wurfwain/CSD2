@@ -18,6 +18,7 @@ public:
 
   void applyEffect(const float& input, float& output) override;
   void setLfo();
+  void setLFO(float frequency);
   void tick();
   float getLfo();
 

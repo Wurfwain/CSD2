@@ -11,12 +11,6 @@ Vibrato::Vibrato(float dryWet) : Effect(dryWet)
     sine = new Sine(8.0, 44100.0);
     vibDelay = new Delay(0, 33010, 44100, 1.0);
 
-    /*
-    Delay delay2[2] {
-        Delay{0.0, 1000, 44100, 1.0},
-        Delay{ 0.0, 1000, 44100, 1.0}
-    };
-    */
 }
 
 Vibrato::~Vibrato()
@@ -26,13 +20,7 @@ Vibrato::~Vibrato()
 }
 
 void Vibrato::applyEffect(const float &input, float &output) {
-    //std::cout << "Vibrato::applyEffect()" << std::endl;
-/*
-    for (int i = 0; i < 2; i++) {
-        delay2[i].setNumDelaySamples(getLfo());
-    }
-*/
-    //del5ay2[1].processFrame(input, output);
+
     vibDelay->setNumDelaySamples(getLfo());
     vibDelay->processFrame(input, output);
 
@@ -60,6 +48,10 @@ void Vibrato::setLfo(){
 
 
     //if (lfo == 1) {std::cout << "lfo: " << lfo << " and LFO freq = " << lfoFreq << std::endl;}
+}
+
+void Vibrato::setLFO(float frequency){
+  sine->setFrequency(frequency);
 }
 
 float Vibrato::getLfo() {
