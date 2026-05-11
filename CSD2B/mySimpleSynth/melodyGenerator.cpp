@@ -79,7 +79,7 @@ void MelodyGenerator::generateIndexList(int range, bool goesUp){
     }
   }
 
-  //Add the high root note to the list if it wasn't created by chance
+  //Add the high "root note" to the list if it wasn't created by chance
   if (!goesUp && indexList[0] != 14) {
     indexList.insert(indexList.begin(), 14);
     indexListSize++;
